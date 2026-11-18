@@ -1,0 +1,80 @@
+# Full stack: PostgreSQL + FastAPI backend + Caddy/React frontend.
+#
+#   docker compose up -d --build     build images and start everything
+#   docker compose ps                status + health
+#   docker compose logs -f backend   follow backend logs
+#   docker compose down              stop (data in volumes is kept)
+#
+# Values like ${JWT_SECRET} come from the .env file next to this file.
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      # Only for running the backend directly on your PC during development.
+      # <PC port>:<container port>; 5433 because another PostgreSQL uses 5432 here.
+      # Reachable only from this PC. Remove this on a real server.
+      - "127.0.0.1:${POSTGRES_HOST_PORT:-5433}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data   # data survives restarts/rebuilds
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    environment:
+      # Inside Docker the database host is the service name "db", port 5432.
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env}
+      ACCESS_TOKEN_MINUTES: ${ACCESS_TOKEN_MINUTES:-15}
+      REFRESH_TOKEN_DAYS: ${REFRESH_TOKEN_DAYS:-7}
+      COOKIE_SECURE: "true"               # served over HTTPS by Caddy
+      MODEL_PATH: /app/models/cat_dog_model.pth
+      UPLOAD_DIR: /app/uploads
+      MAX_UPLOAD_MB: ${MAX_UPLOAD_MB:-5}
+      CONFIDENCE_THRESHOLD: ${CONFIDENCE_THRESHOLD:-}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      API_PUBLIC_PREFIX: /api
+    volumes:
+      - ./models:/app/models:ro           # trained model (read-only); retrain -> just restart
+      - uploads:/app/uploads              # user images survive restarts/rebuilds
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health')"]
+      interval: 10s
+      timeout: 5s
+      start_period: 30s
+      retries: 5
+    # No "ports": the backend is reachable only through Caddy.
+
+  frontend:
+    build: ./frontend
+    restart: unless-stopped
+    environment:
+      SITE_ADDRESS: ${SITE_ADDRESS:-localhost}
+    ports:
+      - "${HTTP_PORT:-80}:80"
+      - "${HTTPS_PORT:-443}:443"
+      - "${HTTPS_PORT:-443}:443/udp"      # HTTP/3
+    volumes:
+      - caddy_data:/data                  # HTTPS certificates (keep them!)
+      - caddy_config:/config
+    depends_on:
+      backend:
+        condition: service_healthy
+
+volumes:
+  pgdata:
+  uploads:
+  caddy_data:
+  caddy_config:

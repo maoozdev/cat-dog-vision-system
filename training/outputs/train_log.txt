@@ -1,0 +1,18 @@
+﻿classes=['cat', 'dog', 'other'] train=4959 val=1062 threads=4
+
+=== Stage 'head': 3 epochs, lr=0.001, trainable params=593,923 ===
+epoch  1 [head    ] train loss 0.1655 acc 0.9401 | val loss 0.0574 acc 0.9793 |    54s  <- best, saved
+epoch  2 [head    ] train loss 0.1022 acc 0.9665 | val loss 0.0466 acc 0.9840 |    40s  <- best, saved
+epoch  3 [head    ] train loss 0.0826 acc 0.9712 | val loss 0.0675 acc 0.9802 |    40s
+
+=== Stage 'finetune': 8 epochs, lr=0.0001, trainable params=1,330,411 ===
+epoch  4 [finetune] train loss 0.1265 acc 0.9538 | val loss 0.0614 acc 0.9783 |    57s
+epoch  5 [finetune] train loss 0.0712 acc 0.9774 | val loss 0.0495 acc 0.9831 |    59s
+epoch  6 [finetune] train loss 0.0664 acc 0.9752 | val loss 0.0458 acc 0.9849 |    72s  <- best, saved
+epoch  7 [finetune] train loss 0.0507 acc 0.9821 | val loss 0.0520 acc 0.9783 |    96s
+epoch  8 [finetune] train loss 0.0386 acc 0.9885 | val loss 0.0510 acc 0.9849 |    96s
+epoch  9 [finetune] train loss 0.0398 acc 0.9863 | val loss 0.0355 acc 0.9840 |    95s
+epoch 10 [finetune] train loss 0.0363 acc 0.9887 | val loss 0.0412 acc 0.9849 |    95s
+epoch 11 [finetune] train loss 0.0329 acc 0.9883 | val loss 0.0414 acc 0.9831 |    96s
+
+Finished in 13.3 min. Best val accuracy 0.9849 -> D:\project_cate_dog_other\models\cat_dog_model.pth

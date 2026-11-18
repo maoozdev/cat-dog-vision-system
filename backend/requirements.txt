@@ -1,0 +1,26 @@
+# Web framework + server
+fastapi>=0.115
+uvicorn[standard]
+python-multipart            # multipart/form-data file uploads
+email-validator             # validates e-mail addresses in Pydantic
+
+# Settings
+pydantic-settings
+
+# Database
+sqlalchemy>=2.0
+psycopg[binary]>=3.2        # PostgreSQL driver
+alembic                     # database migrations
+
+# Security
+pyjwt                       # JSON Web Tokens
+argon2-cffi                 # Argon2 password hashing
+
+# Machine learning (CPU)
+torch>=2.9
+torchvision>=0.24
+pillow
+
+# Testing
+pytest
+httpx2                      # used by FastAPI's TestClient

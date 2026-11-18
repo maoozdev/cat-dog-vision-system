@@ -1,0 +1,14 @@
+# Deep learning
+torch>=2.9
+torchvision>=0.24
+
+# Data handling & evaluation
+numpy
+pandas
+scikit-learn
+matplotlib
+pillow
+
+# Progress bars + Jupyter support in VS Code
+tqdm
+ipykernel

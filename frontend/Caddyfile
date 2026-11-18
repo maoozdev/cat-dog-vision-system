@@ -1,0 +1,44 @@
+# Caddy = web server + reverse proxy + automatic HTTPS.
+#
+# SITE_ADDRESS decides how HTTPS works:
+#   localhost             -> local certificate from Caddy's own CA (browser warns once)
+#   192.168.x.x           -> same, so phones on your Wi-Fi get HTTPS (needed for the camera)
+#   cats.example.com      -> REAL certificate from Let's Encrypt, fully automatic
+#                            (domain must point to this server; ports 80+443 open)
+{$SITE_ADDRESS:localhost} {
+	encode zstd gzip
+
+	# Security headers for every response.
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		Permissions-Policy "camera=(self), microphone=(), geolocation=()"
+		-Server
+	}
+
+	# API: /api/predict -> backend:8000/predict  (handle_path strips the /api prefix)
+	handle_path /api/* {
+		request_body {
+			max_size 6MB # a bit above the app's 5 MB limit so the app can answer nicely
+		}
+		reverse_proxy backend:8000
+	}
+
+	# Interactive API docs (FastAPI): /docs and the schema it loads.
+	handle /docs* {
+		reverse_proxy backend:8000
+	}
+	handle /openapi.json {
+		reverse_proxy backend:8000
+	}
+
+	# Everything else: the React app. Unknown paths (/history, /profile...) get
+	# index.html so React Router can show the right page.
+	handle {
+		root * /srv
+		try_files {path} /index.html
+		file_server
+	}
+}

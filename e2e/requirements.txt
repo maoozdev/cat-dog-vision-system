@@ -1,0 +1,4 @@
+# End-to-end browser tests (Phase 6)
+playwright      # controls a real Chromium browser
+httpx           # seeds extra predictions through the API
+pillow          # builds the fake-camera video from a test photo

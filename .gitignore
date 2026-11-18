@@ -1,0 +1,36 @@
+# ---------- Python ----------
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# ---------- Secrets ----------
+.env
+*.env
+!.env.example
+
+# ---------- Data (too big for Git: ~2 GB of pet/COCO images) ----------
+# The trained model (models/cat_dog_model.pth, 5.9 MB) and the evaluation
+# reports (training/outputs/) ARE committed.
+training/dataset/*
+!training/dataset/.gitkeep
+training/raw/
+uploads/*
+!uploads/.gitkeep
+
+# ---------- Node / frontend ----------
+node_modules/
+frontend/dist/
+
+# ---------- E2E test artifacts ----------
+e2e/.work/
+e2e/screenshots/FAILED.png
+
+# ---------- Logs ----------
+*.log
+
+# ---------- Editors / OS ----------
+.DS_Store
+Thumbs.db

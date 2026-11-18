@@ -1,0 +1,11 @@
+# Store text files with LF line endings, so Docker (Linux) builds behave the same
+# on every computer. Windows-only scripts keep CRLF.
+* text=auto eol=lf
+*.ps1 text eol=crlf
+*.bat text eol=crlf
+
+# Binary files: never touch line endings.
+*.pth binary
+*.png binary
+*.jpg binary
+*.svg text

@@ -1,0 +1,98 @@
+{
+  "model_version": "1.0.0",
+  "checkpoint_epoch": 6,
+  "class_names": [
+    "cat",
+    "dog",
+    "other"
+  ],
+  "test_images": 1062,
+  "confidence_threshold": 0.52,
+  "threshold_tuned_on": "validation",
+  "test_argmax": {
+    "accuracy": 0.9783427495291902,
+    "macro_precision": 0.9783636089518302,
+    "macro_recall": 0.9783427495291902,
+    "macro_f1": 0.9783479642600083,
+    "per_class": {
+      "cat": {
+        "precision": 0.9745762711864406,
+        "recall": 0.9745762711864406,
+        "f1-score": 0.9745762711864406,
+        "support": 354.0
+      },
+      "dog": {
+        "precision": 0.9747191011235955,
+        "recall": 0.980225988700565,
+        "f1-score": 0.9774647887323944,
+        "support": 354.0
+      },
+      "other": {
+        "precision": 0.9857954545454546,
+        "recall": 0.980225988700565,
+        "f1-score": 0.9830028328611898,
+        "support": 354.0
+      }
+    },
+    "confusion_matrix": [
+      [
+        345,
+        4,
+        5
+      ],
+      [
+        7,
+        347,
+        0
+      ],
+      [
+        2,
+        5,
+        347
+      ]
+    ]
+  },
+  "test_with_threshold": {
+    "accuracy": 0.975517890772128,
+    "macro_precision": 0.9755355603912094,
+    "macro_recall": 0.975517890772128,
+    "macro_f1": 0.9755176695210857,
+    "per_class": {
+      "cat": {
+        "precision": 0.9801136363636364,
+        "recall": 0.9745762711864406,
+        "f1-score": 0.9773371104815864,
+        "support": 354.0
+      },
+      "dog": {
+        "precision": 0.9745042492917847,
+        "recall": 0.9717514124293786,
+        "f1-score": 0.9731258840169731,
+        "support": 354.0
+      },
+      "other": {
+        "precision": 0.9719887955182073,
+        "recall": 0.980225988700565,
+        "f1-score": 0.9760900140646976,
+        "support": 354.0
+      }
+    },
+    "confusion_matrix": [
+      [
+        345,
+        4,
+        5
+      ],
+      [
+        5,
+        344,
+        5
+      ],
+      [
+        2,
+        5,
+        347
+      ]
+    ]
+  }
+}
